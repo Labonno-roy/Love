@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Love Today 🖤💚</title>
+    <!-- Tailwind CSS v3 + Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom overrides: Dark Unicorn theme, green glow & custom keyframes -->
+    <style>
+        .love-text{
+    font-size: 50px;
+    font-weight: bold;
+    color: green;
+}
+        /* Dark mystical background with deep unicorn aura */
+        body {
+            background: radial-gradient(circle at 10% 20%, #0a0f0a, #030603);
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom neon green scroll */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a1f0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2eff8e;
+            border-radius: 10px;
+            box-shadow: 0 0 6px #2eff8e;
+        }
+
+        /* Glassmorphism with dark unicorn shine */
+        .glass-unicorn {
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(46, 255, 142, 0.25);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 15px rgba(46, 255, 142, 0.2);
+        }
+
+        /* Floating green pulse effect for interactive elements */
+        @keyframes greenPulse {
+            0% {
+                text-shadow: 0 0 0px #2eff8e;
+                border-color: #2eff8e33;
+            }
+
+            50% {
+                text-shadow: 0 0 8px #2eff8e;
+                border-color: #2eff8eaa;
+            }
+
+            100% {
+                text-shadow: 0 0 0px #2eff8e;
+                border-color: #2eff8e33;
+            }
+        }
+
+        .glow-text {
+            animation: greenPulse 2.5s infinite;
+        }
+
+        /* Unicorn floating silhouette */
+        @keyframes floatHorn {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-6px) rotate(2deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .unicorn-float {
+            animation: floatHorn 3s ease-in-out infinite;
+        }
+
+        /* Fade in effect for result */
+        .fade-in-up {
+            animation: fadeUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom loader - neon green spin */
+        .loader-neon {
+            width: 55px;
+            height: 55px;
+            border: 5px solid rgba(46, 255, 142, 0.2);
+            border-top: 5px solid #2eff8e;
+            border-radius: 50%;
+            animation: spin 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            box-shadow: 0 0 12px #2eff8e;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* falling hearts / unicorn stars background (green tint) */
+        .falling-star {
+            position: fixed;
+            bottom: -20px;
+            color: #2eff8e;
+            font-size: 1.2rem;
+            pointer-events: none;
+            z-index: 999;
+            filter: drop-shadow(0 0 6px #6effa3);
+            animation: riseAndFade linear forwards;
+        }
+
+        @keyframes riseAndFade {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-120vh) rotate(320deg);
+                opacity: 0;
+            }
+        }
+
+        /* button green hover effect */
+        .btn-green-glow {
+            transition: all 0.2s ease;
+        }
+
+        .btn-green-glow:hover {
+            box-shadow: 0 0 14px #2eff8e;
+            transform: scale(1.02);
+            background: #1f9a55;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2eff8e !important;
+            box-shadow: 0 0 0 2px rgba(46, 255, 142, 0.4);
+        }
+        .love-text{
+    font-size: 50px;
+    font-weight: bold;
+    
+}
+
+
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4 relative">
+
+    <!-- Ambient floating magical icons (unicorn + green sparkles) -->
+    <div id="magicContainer" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- Music toggle button with unicorn style -->
+    <button id="musicBtn"
+        class="fixed top-5 right-5 z-50 bg-black/60 backdrop-blur-sm border border-green-400 text-green-400 px-4 py-2 rounded-full font-bold shadow-xl flex items-center gap-2 hover:bg-green-900/40 transition-all">
+        <i class="fa-solid fa-music"></i> <span class="hidden sm:inline">Unicorn Melody</span>
+    </button>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <!-- fallback silent if external fails, but still works -->
+    </audio>
+
+    <!-- Main Game Card -->
+    <div
+        class="glass-unicorn w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-2xl transition-all duration-300 z-10 border border-green-500/40">
+
+        <!-- Header with unicorn love theme -->
+        <div class="text-center mb-6">
+            <div class="flex justify-center gap-3 mb-2 unicorn-float">
+                <span class="text-5xl drop-shadow-md">🦄</span>
+                <span class="text-5xl drop-shadow-md">💚</span>
+                <span class="text-5xl drop-shadow-md">✨</span>
+            </div>
+            <h1
+                class="text-4xl md:text-5xl font-extrabold tracking-wide bg-gradient-to-r from-green-300 to-emerald-500 bg-clip-text text-transparent">
+                UNICORN LOVE GUESS
+            </h1>
+            <p class="text-green-300/80 text-sm mt-2 font-mono">✦ mystical number divination ✦</p>
+        </div>
+
+        <!-- FORM SECTION (initial guess area) -->
+        <div id="formSection" class="space-y-5 fade-in-up">
+            <div class="relative">
+                <i class="fa-solid fa-user-astronaut absolute left-4 top-4 text-green-400"></i>
+                <input type="text" id="yourName" placeholder="✦ your true name ✦"
+                    class="w-full bg-black/50 border border-green-700/60 rounded-2xl py-3 pl-11 pr-4 text-green-200 placeholder-green-700/70 focus:border-green-400 transition">
+            </div>
+            <div class="relative">
+                <i class="fa-solid fa-user-astronaut absolute left-4 top-4 text-green-400"></i>
+                <input type="text" id="crushName" placeholder="✦ your beloved's name ✦"
+                    class="w-full bg-black/50 border border-green-700/60 rounded-2xl py-3 pl-11 pr-4 text-green-200 placeholder-green-700/70 focus:border-green-400 transition">
+            </div>
+            <button id="calculateBtn"
+                class="w-full btn-green-glow bg-gradient-to-r from-green-700 to-emerald-800 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 rounded-2xl text-lg shadow-lg flex items-center justify-center gap-3 transition-all">
+                <i class="fa-solid fa-heart-circle-plus"></i> REVEAL LOVE DESTINY
+            </button>
+            <p class="text-center text-green-600/60 text-xs mt-2"> 🖤💚guess your love percentage 🖤💚</p>
+        </div>
+
+        <!-- LOADING SECTION (magic sparkles) -->
+        <div id="loadingSection" class="hidden flex flex-col items-center justify-center py-10">
+            <div class="loader-neon"></div>
+            <p class="mt-5 text-green-300 font-semibold tracking-wider animate-pulse">
+                <i class="fa-solid fa-wand-magic"></i> Channeling unicorn energy...
+            </p>
+            <p class="text-green-500/50 text-xs mt-2">The stars are aligning ✨</p>
+        </div>
+
+        <!-- RESULT SECTION (revealed love score & guessing) -->
+        <div id="resultSection" class="hidden space-y-5 fade-in-up">
+            <div class="text-center border-b border-green-500/30 pb-3">
+                <span id="coupleNamesDisplay" class="text-2xl font-bold text-green-300">——— ❤️ ———</span>
+            </div>
+            <div class="text-center">
+                <div class="text-7xl font-black text-green-400 drop-shadow-lg">
+                    <span id="lovePercent">0</span><span class="text-3xl">%</span>
+                </div>
+                <div class="w-full bg-black/60 rounded-full h-5 mt-3 border border-green-500/40 overflow-hidden">
+                    <div id="progressLoveBar"
+                        class="bg-gradient-to-r from-green-500 to-lime-400 h-5 rounded-full transition-all duration-1000 ease-out"
+                        style="width: 0%"></div>
+                </div>
+            </div>
+            <div class="bg-black/40 rounded-2xl p-4 text-center">
+                <p id="fortuneMessage" class="text-green-200 font-medium text-lg leading-relaxed"></p>
+                <div class="mt-3 flex justify-center gap-2 text-green-400 text-sm">
+                    <i class="fa-regular fa-message"></i> <span id="subMessage" class="italic">unicorn whisper...</span>
+                </div>
+            </div>
+            <button id="tryAgainBtn"
+                class="w-full bg-transparent border border-green-500 text-green-400 font-bold py-3 rounded-2xl hover:bg-green-900/30 transition-all flex ijtems-center justify-center gap-2 mt-2">
+                <i class="fa-solid fa-arrows-rotate"></i> New Destiny
+            </button>
+            <p class="text-center text-green-700/70 text-[11px] font-mono">✦ unicorn magic never lies ✦</p>
+        </div>
+    </div>
+
+    <footer class="absolute bottom-3 text-green-700/60 text-xs text-center w-full z-10">
+        🖤💚 mystical love guessing • made by <span class="text-green">Labonno Roy</span> 💚🖤
+    </footer>
+
+    <p id="demo"></p>
+
+    <script>
+
+        let love = "yes";
+
+let userNum = prompt("Do you Love me (Yes Or No)..?");
+
+while(userNum.toLowerCase() != love){
+    userNum = prompt("No ar kno option nai hihi..., plz try again !!");
+}
+
+document.getElementById("demo").innerText = "Love You Too ❤️";
+document.getElementById("demo").classList.add("love-text");
+        
+
+     // ======================= UNICORN LOVE GUESSING GAME (DARK + GREEN THEME) =======================
+       
+        // ---- DOM elements ----
+        const formSection = document.getElementById('formSection');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultSection = document.getElementById('resultSection');
+        const yourNameInput = document.getElementById('yourName');
+        const crushNameInput = document.getElementById('crushName');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const tryAgainBtn = document.getElementById('tryAgainBtn');
+        const lovePercentSpan = document.getElementById('lovePercent');
+        const progressBar = document.getElementById('progressLoveBar');
+        const coupleNamesDisplay = document.getElementById('coupleNamesDisplay');
+        const fortuneMsg = document.getElementById('fortuneMessage');
+        const subMessageSpan = document.getElementById('subMessage');
+
+        // Music elements
+        const musicBtn = document.getElementById('musicBtn');
+        const bgMusic = document.getElementById('bgMusic');
+        let isMusicPlaying = false;
+
+        // Background mystical falling icons (green hearts & unicorn sparkles)
+        function createFallingIcon() {
+            const container = document.getElementById('magicContainer');
+            if (!container) return;
+            const icons = ['🦄', '💚', '✨', '★', '✧', '💚', '🦄', '🌿', '⚡'];
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            const el = document.createElement('div');
+            el.className = 'falling-star';
+            el.innerHTML = randomIcon;
+            el.style.left = Math.random() * 100 + '%';
+            el.style.fontSize = (Math.random() * 18 + 14) + 'px';
+            el.style.animationDuration = (Math.random() * 6 + 4) + 's';
+            el.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(el);
+            setTimeout(() => { if (el && el.remove) el.remove(); }, 9000);
+        }
+        setInterval(createFallingIcon, 380);
+
+        // Advanced love calculation with mystical unicorn algorithm (1-100)
+        // ensures unique and playful results with green/black theme
+        function computeUnicornLove(name1, name2) {
+            if (!name1 && !name2) return 42;
+            let combined = (name1 + name2).toLowerCase().replace(/\s/g, '');
+            let hash = 0;
+            for (let i = 0; i < combined.length; i++) {
+                hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+                hash |= 0;
+            }
+            let base = Math.abs(hash) % 101;
+            // add mystical fluctuation based on name lengths
+            let magic = (name1.length * 7 + name2.length * 13) % 29;
+            let finalScore = (base + magic) % 101;
+            if (finalScore < 5) finalScore += 17;
+            if (finalScore > 98) finalScore -= 9;
+            return Math.min(99, Math.max(1, finalScore));
+        }
+
+        // generate romantic fortune based on love score
+        function getLoveMessage(score, nameA, nameB) {
+            if (score >= 95) return "💚 Soulmates Forever! A rare and magical connection!";
+            if (score >= 85) return "🦄✨ Perfect Match! You are made for each other.";
+            if (score >= 70) return "💚  True Love! Your hearts seem to beat in harmony.";
+            if (score >= 55) return "🌙 Your love is growing, but you need to love even more to make this relationship stronger.";
+            if (score >= 40) return "🍃 SWEET POSSIBILITY! With time, love blooms!";
+            if (score >= 25) return "💫 FRIENDSHIP BLOSSOM! The seed of love is there!";
+            return "🌟Persentenge kom to ki tobuo valobasi .";
+        }
+
+        function getSubMessage(score) {
+            if (score >= 90) return "✦ Soulmates Forever! পৃথিবীর সেরা জুটিগুলোর একটি। ✦";
+            if (score >= 70) return "✦ Perfect Match! তোমরা একে অপরের জন্যই তৈরি। ✦";
+            if (score >= 60) return "✦ True Love! সম্পর্ক অনেক গভীর হতে পারে। ✦";
+            if (score >= 50) return "✦ Sweet Love! সুন্দর একটি জুটি হতে পারে।✦";
+            if (score >= 30) return "✦ Friendship Zone! বন্ধু হিসেবে ভালো মানাবে✦";
+            return "✦ need more and more love ✦";
+        }
+
+        // Confetti effect with green & white hearts + unicorn symbols
+        function launchGreenConfetti() {
+            const confContainer = document.createElement('div');
+            confContainer.style.position = 'fixed';
+            confContainer.style.top = '0';
+            confContainer.style.left = '0';
+            confContainer.style.width = '100%';
+            confContainer.style.height = '100%';
+            confContainer.style.pointerEvents = 'none';
+            confContainer.style.zIndex = '9999';
+            document.body.appendChild(confContainer);
+
+            const icons = ['💚', '🦄', '✨', '★', '💚', '🌿', '🦄'];
+            for (let i = 0; i < 90; i++) {
+                const particle = document.createElement('div');
+                particle.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+                particle.style.position = 'absolute';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = '-20px';
+                particle.style.fontSize = (Math.random() * 28 + 12) + 'px';
+                particle.style.opacity = Math.random() * 0.9 + 0.3;
+                particle.style.filter = 'drop-shadow(0 0 5px #2eff8e)';
+                particle.style.transition = 'transform linear';
+                confContainer.appendChild(particle);
+
+                const duration = Math.random() * 2.5 + 2;
+                const endPos = window.innerHeight + 100;
+                let startTime = performance.now();
+                const initialTop = -20;
+                const leftPos = parseFloat(particle.style.left);
+                const rotateStart = Math.random() * 360;
+                particle.style.transform = `rotate(${rotateStart}deg)`;
+
+                function animateParticle(now) {
+                    const elapsed = now - startTime;
+                    const t = Math.min(1, elapsed / (duration * 1000));
+                    const newTop = initialTop + (endPos * t);
+                    particle.style.top = newTop + 'px';
+                    particle.style.transform = `rotate(${rotateStart + t * 540}deg)`;
+                    if (t < 1) {
+                        requestAnimationFrame(animateParticle);
+                    } else {
+                        if (particle && particle.remove) particle.remove();
+                    }
+                }
+                requestAnimationFrame(animateParticle);
+            }
+            setTimeout(() => {
+                if (confContainer && confContainer.remove) confContainer.remove();
+            }, 3300);
+        }
+
+        // Main calculation with loading effect
+        function performLoveGuessing() {
+            const yourName = yourNameInput.value.trim();
+            const crushName = crushNameInput.value.trim();
+
+            if (!yourName || !crushName) {
+                alert("✦ The unicorn needs both names! ✦\nPlease enter your name and your beloved's name.");
+                return;
+            }
+
+            // hide form, show loading
+            formSection.classList.add('hidden');
+            loadingSection.classList.remove('hidden');
+            resultSection.classList.add('hidden');
+
+            // Simulate magical calculation time
+            setTimeout(() => {
+                const loveScore = computeUnicornLove(yourName, crushName);
+                // Update UI with results
+                coupleNamesDisplay.innerHTML = `${escapeHtml(yourName)} 💚 ${escapeHtml(crushName)}`;
+                lovePercentSpan.innerText = loveScore;
+                progressBar.style.width = loveScore + '%';
+                const mainMsg = getLoveMessage(loveScore, yourName, crushName);
+                fortuneMsg.innerHTML = mainMsg;
+                subMessageSpan.innerHTML = getSubMessage(loveScore);
+
+                // extra special effect for high score
+                if (loveScore >= 90) {
+                    launchGreenConfetti();
+                    // additional unicorn sound-like vibe: no audio needed, but visual
+                    const extraUnicorn = document.createElement('div');
+                    extraUnicorn.innerHTML = "🦄💚✨";
+                    extraUnicorn.className = "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-7xl z-50 pointer-events-none animate-ping";
+                    extraUnicorn.style.textShadow = "0 0 20px #2eff8e";
+                    document.body.appendChild(extraUnicorn);
+                    setTimeout(() => extraUnicorn.remove(), 1500);
+                }
+
+                // switch to result view
+                loadingSection.classList.add('hidden');
+                resultSection.classList.remove('hidden');
+                // Add green glow on result
+                resultSection.classList.add('fade-in-up');
+            }, 1200); // magical delay
+        }
+
+        // simple escape to avoid injection
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function (m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function (c) {
+                return c;
+            });
+        }
+
+        // reset everything to initial state (new guessing round)
+        function resetToNewGuessing() {
+            resultSection.classList.add('hidden');
+            loadingSection.classList.add('hidden');
+            formSection.classList.remove('hidden');
+            yourNameInput.value = '';
+            crushNameInput.value = '';
+            progressBar.style.width = '0%';
+            lovePercentSpan.innerText = '0';
+            coupleNamesDisplay.innerHTML = '——— ❤️ ———';
+            fortuneMsg.innerHTML = '';
+            subMessageSpan.innerHTML = 'unicorn whisper...';
+            // focus
+            yourNameInput.focus();
+        }
+
+        // event listeners
+        calculateBtn.addEventListener('click', performLoveGuessing);
+        tryAgainBtn.addEventListener('click', resetToNewGuessing);
+
+        // music handling: if the audio fails, we catch gracefully
+        musicBtn.addEventListener('click', () => {
+            if (!isMusicPlaying) {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    musicBtn.innerHTML = '<i class="fa-solid fa-music"></i> <span class="hidden sm:inline">Melody On</span>';
+                }).catch((err) => {
+                    console.log("Music autoplay blocked, user interaction needed");
+                    // still toggle visually but can't play? we can enable again on next click
+                    if (!isMusicPlaying) {
+                        bgMusic.play().catch(e => console.log);
+                        isMusicPlaying = true;
+                        musicBtn.innerHTML = '<i class="fa-solid fa-music"></i> <span class="hidden sm:inline">Melody On</span>';
+                    }
+                });
+            } else {
+                bgMusic.pause();
+                isMusicPlaying = false;
+                musicBtn.innerHTML = '<i class="fa-solid fa-music-slash"></i> <span class="hidden sm:inline">Melody Off</span>';
+            }
+        });
+
+        // initial fallback style for music button
+        musicBtn.innerHTML = '<i class="fa-solid fa-music"></i> <span class="hidden sm:inline">Unicorn Melody</span>';
+
+        // Adding initial floating elements
+        for (let i = 0; i < 8; i++) setTimeout(() => createFallingIcon(), i * 200);
+
+        // Unicorn magic hint: dark background already set, green text active.
+        console.log("💚 Unicorn Love Guessing ready — dark forest green magic 🦄");
+    </script>
+</body>
+
+</html>
